@@ -37,5 +37,47 @@ describe('pi', () => {
                 assert.deepStrictEqual(expected, actual);
             });
         });
+
+        describe('.mobius()', () => {
+            it('calculates the Mobius function when x has a squared prime factor.', () => {
+                // Setup
+                const num = 735;
+                const expected = 0;
+                // Excercise
+                const actual = ersievepi.mobius(num);
+                // Verify
+                assert.strictEqual(expected, actual);
+            });
+
+            it('calculates the Mobius function when x is square-free and has a odd number of prime factors.', () => {
+                // Setup
+                const num = 222;
+                const expected = -1;
+                // Excercise
+                const actual = ersievepi.mobius(num);
+                // Verify
+                assert.strictEqual(expected, actual);
+            });
+
+            it('calculates the Mobius function when x is square-free and has a even number of prime factors.', () => {
+                // Setup
+                const num = 579;
+                const expected = 1;
+                // Excercise
+                const actual = ersievepi.mobius(num);
+                // Verify
+                assert.strictEqual(expected, actual);
+            });
+
+            it('calculates the Mobius function when x is 1.', () => {
+                // Setup
+                const num = 1;
+                const expected = 1;
+                // Excercise
+                const actual = ersievepi.mobius(num);
+                // Verify
+                assert.strictEqual(expected, actual);
+            });
+        });
     });
 });
