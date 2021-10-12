@@ -1,26 +1,26 @@
 const assert = require('assert');
-const ersievepi = require('../nested_functions/ersievepi.js');
+const utilities = require('../nested_functions/utilities.js');
 // Test
 describe('pi', () => {
-    describe('.ersievepi', () => {
+    describe('.utilities', () => {
         describe('.ersieve()', () => {
             it('does a Eratosthenes sieve of integers from 1 to n.', () => {
                 const num = 25;
                 const expected = [2, 3, 5, 7, 11, 13, 17, 19, 23];
                 // Excercise
-                const actual = ersievepi.ersieve(num);
+                const actual = utilities.ersieve(num);
                 // Verify
                 assert.deepStrictEqual(expected, actual);
             });
         });
 
-        describe('.piofy()', () => {
+        describe('.pismall()', () => {
             it('computes pi of y, a random integer between the cube root of x and the sqare root of x.', () => {
                 // Setup
                 const num = 25;
                 const expected = 9;
                 // Excercise
-                const actual = ersievepi.piofy(num);
+                const actual = utilities.pismall(num);
                 // Verify
                 assert.strictEqual(expected, actual);
             });
@@ -32,7 +32,7 @@ describe('pi', () => {
                 const num = 25;
                 const expected = [0, 1, 2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 6, 6, 6, 6, 7, 7, 8, 8, 8, 8, 9, 9, 9];
                 // Excercise
-                const actual = ersievepi.pitabulator(num);
+                const actual = utilities.pitabulator(num);
                 // Verify
                 assert.deepStrictEqual(expected, actual);
             });
@@ -44,7 +44,7 @@ describe('pi', () => {
                 const num = 735;
                 const expected = 0;
                 // Excercise
-                const actual = ersievepi.mobius(num);
+                const actual = utilities.mobius(num);
                 // Verify
                 assert.strictEqual(expected, actual);
             });
@@ -54,7 +54,7 @@ describe('pi', () => {
                 const num = 222;
                 const expected = -1;
                 // Excercise
-                const actual = ersievepi.mobius(num);
+                const actual = utilities.mobius(num);
                 // Verify
                 assert.strictEqual(expected, actual);
             });
@@ -64,7 +64,7 @@ describe('pi', () => {
                 const num = 579;
                 const expected = 1;
                 // Excercise
-                const actual = ersievepi.mobius(num);
+                const actual = utilities.mobius(num);
                 // Verify
                 assert.strictEqual(expected, actual);
             });
@@ -74,9 +74,21 @@ describe('pi', () => {
                 const num = 1;
                 const expected = 1;
                 // Excercise
-                const actual = ersievepi.mobius(num);
+                const actual = utilities.mobius(num);
                 // Verify
                 assert.strictEqual(expected, actual);
+            });
+        });
+
+        describe('.mobiustabulator()', () => {
+            it('tabulates the Mobius function up to a small number', () => {
+                // Setup
+                const num = 25;
+                const expected = [1, -1, -1, 0, -1, 1, -1, 0, 0, 1, -1, 0, -1, 1, 1, 0, -1, 0, -1, 0, 1, 1, -1, 0, 0];
+                // Excercise
+                const actual = utilities.mobiustabulator(25);
+                // Verify
+                assert.deepStrictEqual(expected, actual);
             });
         });
     });

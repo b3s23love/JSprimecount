@@ -1,5 +1,4 @@
 const ersieve = n => {
-    console.log(`Doing Eratosthenes sieve for ${n}...`);
     // Eratosthenes algorithm to find all primes under n
     var array = [], upperLimit = Math.sqrt(n), output = [];
     
@@ -23,19 +22,15 @@ const ersieve = n => {
             output.push(i);
         }
     }
-    console.log('Sieve done!');
     return output;
 }
 
-const piofy = y => {
-    console.log(`Calculating pi of ${y}...`);
+const pismall = y => {
     let pi = ersieve(y).length;
-    console.log('Pi calculated!');
     return pi;
 }
 
 const pitabulator = (x) => {
-    console.log(`Tabulating pi for ${x}...`);
     let primearr = ersieve(x);
     let pitable = [0];
     for (let i = 1; i < x; i++) {
@@ -45,7 +40,6 @@ const pitabulator = (x) => {
             pitable.push(pitable[i - 1]);
         }
     }
-    console.log('Pi tabulated!');
     return pitable;
 }
 
@@ -54,20 +48,24 @@ const mobius = n => {
     if (n === 1) {
         return 1;
     }
-    
-    let p = 0;
-  
+
     // Handling 2 separately
+    if (n === 2) {
+        return -1;
+    }
+    let p = 0;
+    
+    // Handling divisibility by 2 separately
     if (n % 2 == 0)
     {
         n = parseInt(n / 2, 10);
         p++;
-  
+        
         // If 2^2 also divides N
         if (n % 2 == 0)
             return 0;
     }
-  
+    
     // Check for all other prime factors
     for (let i = 3; i <= Math.sqrt(n); i = i+2)
     {
@@ -76,17 +74,26 @@ const mobius = n => {
         {
             n = parseInt(n / i, 10);
             p++;
-  
+            
             // If i^2 also divides N
             if (n % i == 0)
                 return 0;
         }
     }
-  
+
     return (p % 2 == 0)? -1 : 1;
+}
+
+const mobiustabulator = (x) => {
+    let mobiustable = [];
+    for (let i = 1; i <= x; i++) {
+        mobiustable.push(mobius(i));
+    }
+    return mobiustable;
 }
 // Module exports
 module.exports.ersieve = ersieve;
-module.exports.piofy = piofy;
+module.exports.pismall = pismall;
 module.exports.pitabulator = pitabulator;
 module.exports.mobius = mobius;
+module.exports.mobiustabulator = mobiustabulator;
