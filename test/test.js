@@ -1,6 +1,7 @@
 const assert = require('assert');
 const utilities = require('../nested_functions/utilities.js');
 const S0 = require('../nested_functions/phi/S0.js');
+const S1 = require('../nested_functions/phi/S/S1.js');
 // Test
 describe('pi', () => {
     describe('.utilities', () => {
@@ -122,6 +123,7 @@ describe('pi', () => {
 
     describe('.phi', () => {
         describe('.S0', () => {
+            it('computes S0', () => {
             // Setup
             const x = 1000;
             const y = 25;
@@ -130,6 +132,22 @@ describe('pi', () => {
             const actual = S0(x, y);
             // Verify
             assert.strictEqual(expected, actual);
+            });
+        });
+
+        describe('.S', () => {
+            describe('.S1()', () => {
+                it('computes S1', () => {
+                    // Setup
+                    const num1 = utilities.pismall(25);
+                    const num2 = utilities.pismall(Math.cbrt(1000));
+                    const expected = 10;
+                    // Excercise
+                    const actual = S1(num1, num2);
+                    // Verify
+                    assert.strictEqual(expected, actual);
+                });
+            });
         });
     });
 });
