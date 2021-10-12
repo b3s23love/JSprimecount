@@ -30,7 +30,7 @@ const pismall = y => {
     return pi;
 }
 
-const pitabulator = (x) => {
+const pitabulator = x => {
     let primearr = ersieve(x);
     let pitable = [0];
     for (let i = 1; i < x; i++) {
@@ -84,12 +84,22 @@ const mobius = n => {
     return (p % 2 == 0)? -1 : 1;
 }
 
-const mobiustabulator = (x) => {
+const mobiustabulator = x => {
     let mobiustable = [];
     for (let i = 1; i <= x; i++) {
         mobiustable.push(mobius(i));
     }
     return mobiustable;
+}
+
+const phismall = (x, b, primlist) => {
+    if (b === 0) {
+        return Math.floor(x);
+    } else {
+        let phi1 = phismall(x, b - 1, primlist);
+        let phi2 = phismall(x / primlist[b - 1], b - 1, primlist);
+        return phi1 - phi2;
+    }
 }
 // Module exports
 module.exports.ersieve = ersieve;
@@ -97,3 +107,4 @@ module.exports.pismall = pismall;
 module.exports.pitabulator = pitabulator;
 module.exports.mobius = mobius;
 module.exports.mobiustabulator = mobiustabulator;
+module.exports.phismall = phismall;

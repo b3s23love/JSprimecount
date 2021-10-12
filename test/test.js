@@ -91,5 +91,31 @@ describe('pi', () => {
                 assert.deepStrictEqual(expected, actual);
             });
         });
+
+        describe('.phismall()', () => {
+            it('calculates the partial sieve function phi(x, b) when b is 0', () => {
+                // Setup
+                const num1 = 25.2;
+                const num2 = 0;
+                const arr = [];
+                const expected = 25;
+                // Excercise
+                const actual = utilities.phismall(num1, num2, arr);
+                // Verify
+                assert.strictEqual(expected, actual);
+            });
+
+            it('calculates the partial sieve function phi(x, b) when b is greater than 0', () => {
+                // Setup
+                const num1 = 25.5;
+                const num2 = 3;
+                const arr = [2, 3, 5];
+                const expected = 7;
+                // Excercise
+                const actual = utilities.phismall(num1, num2, arr);
+                // Verify
+                assert.strictEqual(expected, actual);
+            });
+        });
     });
 });
