@@ -12,7 +12,10 @@ The algorithm: https://www.ams.org/journals/mcom/1996-65-213/S0025-5718-96-00674
 	
 ## Technologies
 Project is created with:
+* Node version: 14.17.6
 * Mocha version: 9.1.2
+* prompt-sync version: 4.2.0
+* assert version: 2.0.0
 	
 ## Setup
 To run this project, just run it using node:
