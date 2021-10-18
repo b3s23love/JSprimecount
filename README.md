@@ -7,7 +7,7 @@ A JavaScript implementation of the Deleglise-Rivat algorithm for calculating the
 * [Test](#test)
 
 ## General info
-This project is a JavaScript implementation of a modern version of the Meissnel-Lehmer method for calculating the prime-counting function π(x) for x up to 1 trillion.
+This project is a JavaScript implementation of the Deleglise-Rivat algorithm for calculating the prime-counting function π(x) for x up to 1 trillion.
 The algorithm: https://www.ams.org/journals/mcom/1996-65-213/S0025-5718-96-00674-6/S0025-5718-96-00674-6.pdf
 	
 ## Technologies
