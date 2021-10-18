@@ -4,10 +4,10 @@ Link to the mathematical paper: https://www.ams.org/journals/mcom/1996-65-213/S0
 Copyright © 2021 Jakub Drozd
 For full notice see pi.js */
 const assert = require('assert');
-const utilities = require('../nested_functions/utilities.js');
-const S0 = require('../nested_functions/phi/S0.js');
-const S1 = require('../nested_functions/phi/S/S1.js');
-const U = require('../nested_functions/phi/S/S2/U.js');
+const utilities = require('../deleglise-rivat/utilities.js');
+const S0 = require('../deleglise-rivat/S0.js');
+const S1 = require('../deleglise-rivat/S1.js');
+const U = require('../deleglise-rivat/U.js');
 // Test
 describe('pi', () => {
     describe('.utilities', () => {

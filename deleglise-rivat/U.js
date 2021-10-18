@@ -4,7 +4,7 @@ Link to the mathematical paper: https://www.ams.org/journals/mcom/1996-65-213/S0
 Copyright © 2021 Jakub Drozd
 For full notice see pi.js */
 // Module import
-const { pitabulator, ersieve } = require('../../../utilities.js');
+const { pitabulator, ersieve } = require('./utilities.js');
 // Function
 const U = (x, y) => {
     console.log('Computing U...');

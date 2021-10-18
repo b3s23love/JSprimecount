@@ -4,8 +4,9 @@ Link to the mathematical paper: https://www.ams.org/journals/mcom/1996-65-213/S0
 Copyright © 2021 Jakub Drozd
 For full notice see pi.js */
 // Module imports
-const V1 = require('./V/V1.js');
-const V2 = require('./V/V2.js');
+const S1 = require('./S1.js');
+const S2 = require('./S2.js');
+const S3 = require('./S3.js');
 // Have to do...
 // Module export
 module.exports = S;
