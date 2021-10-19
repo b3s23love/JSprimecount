@@ -17,9 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/.
 E-mail: Kuba.drozd09@wp.pl */
 // Module imports
-const P2 = require('./nested_functions/P2.js');
-const phi = require('./nested_functions/phi.js');
-const utilities = require('./nested_functions/utilities.js');
+const utilities = require('./deleglise-rivat/utilities.js');
 // Function
 const pi = x => {
     console.log(`Calculating pi for ${x}...`);
