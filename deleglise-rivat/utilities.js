@@ -8,12 +8,12 @@ const ersieve = n => {
     var array = [], upperLimit = Math.sqrt(n), output = [];
     
     // Make an array from 2 to (n - 1)
-    for (var i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
         array.push(true);
     }
     
     // Remove multiples of primes starting from 2, 3, 5,...
-    for (var i = 2; i <= upperLimit; i++) {
+    for (let i = 2; i <= upperLimit; i++) {
         if (array[i]) {
             for (var j = i * i; j < n; j += i) {
                 array[j] = false;
@@ -22,18 +22,18 @@ const ersieve = n => {
     }
     
     // All array[i] set to true are primes
-    for (var i = 2; i < n; i++) {
+    for (let i = 2; i < n; i++) {
         if(array[i]) {
             output.push(i);
         }
     }
     return output;
-}
+};
 
 const pismall = y => {
     let pi = ersieve(y).length;
     return pi;
-}
+};
 
 const pitabulator = x => {
     let primearr = ersieve(x);
@@ -46,7 +46,7 @@ const pitabulator = x => {
         }
     }
     return pitable;
-}
+};
 
 const mobius = n => {
     // Handling 1 separately
@@ -87,7 +87,7 @@ const mobius = n => {
     }
 
     return (p % 2 == 0)? -1 : 1;
-}
+};
 
 const mobiustabulator = x => {
     let mobiustable = [];
@@ -95,7 +95,7 @@ const mobiustabulator = x => {
         mobiustable.push(mobius(i));
     }
     return mobiustable;
-}
+};
 
 const phismall = (x, b, primlist) => {
     if (b === 0) {
@@ -105,7 +105,7 @@ const phismall = (x, b, primlist) => {
         let phi2 = phismall(x / primlist[b - 1], b - 1, primlist);
         return phi1 - phi2;
     }
-}
+};
 // Module exports
 module.exports.ersieve = ersieve;
 module.exports.pismall = pismall;

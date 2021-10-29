@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/.
 E-mail: Kuba.drozd09@wp.pl */
 // Import of modules
-const pi = require('./pi.js');
-const prompt = require('prompt-sync')();
+const pi = require('./deleglise-rivat/utilities.js');
+const { hideBin } = require('yargs/helpers');
+const options = require('yargs')(hideBin(process.argv)).argv;
 // License
-console.log('JSprimecount Copyright © 2021 Jakub Drozd')
+console.log('JSprimecount Copyright © 2021 Jakub Drozd');
 console.log('This program comes with ABSOLUTELY NO WARRANTY; for details see https://github.com/JakubDrozd/JSprimecount/blob/main/LICENSE.txt.');
 console.log('This is free software, and you are welcome to redistribute it under certain conditions; see the above link for details.');
-let x = Number(prompt('Enter x: '));
-while (x > 1000000000000 || x < 10 || isNaN(x)) {
-    console.log('Number must be between 10 and 1 trillion');
-    x = Number(prompt('Enter x: '));
+let x = options._[0];
+if (x > 1000000000000 || x < 10 || isNaN(x)) {
+    throw new Error('Number must be between 10 and 1 trillion');
 }
-console.log(pi(x));
+console.log(pi.pismall(x));
