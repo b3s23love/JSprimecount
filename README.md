@@ -18,9 +18,10 @@ Project is created with:
 * assert version: 2.0.0
 	
 ## Setup
-To run this project, just run it using node:
+To run this project, run it using node:
 
 ```
+$ node install
 $ node main.js
 ```
 
