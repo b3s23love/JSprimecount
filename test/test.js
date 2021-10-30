@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* JSprimecount calculates pi(x), the prime-counting function using the Deleglise-Rivat algorithm.
 Link to the mathematical paper: https://www.ams.org/journals/mcom/1996-65-213/S0025-5718-96-00674-6/S0025-5718-96-00674-6.pdf
 
@@ -94,7 +95,7 @@ describe('pi', () => {
                 const num = 25;
                 const expected = [1, -1, -1, 0, -1, 1, -1, 0, 0, 1, -1, 0, -1, 1, 1, 0, -1, 0, -1, 0, 1, 1, -1, 0, 0];
                 // Excercise
-                const actual = utilities.mobiustabulator(25);
+                const actual = utilities.mobiustabulator(num);
                 // Verify
                 assert.deepStrictEqual(expected, actual);
             });
