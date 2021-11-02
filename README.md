@@ -38,7 +38,7 @@ $ node main.js 1e7
 Usage: main.js x [options]
 
 Positionals:
-  x                                                                     [number]
+  x  The number for computing the prime-counting function.              [number]
 
 Options:
   -v, --version  Show version number                                   [boolean]
