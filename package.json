@@ -1,6 +1,6 @@
 {
   "name": "jsprimecount",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A JS implenentation on a modern version of the Meissnel-Lehmer method of computing the prime-counting function for any argument below 1 trillion.",
   "main": "main.js",
   "directories": {

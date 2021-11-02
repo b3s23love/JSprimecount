@@ -1,5 +1,4 @@
-/* JSprimecount calculates pi(x), the prime-counting function using the Deleglise-Rivat algorithm.
-Link to the mathematical paper: https://www.ams.org/journals/mcom/1996-65-213/S0025-5718-96-00674-6/S0025-5718-96-00674-6.pdf
+/* JSprimecount is a fast implementation of algorithms calculating the prime-counting function.
 
 Copyright © 2021 Jakub Drozd
 
@@ -19,13 +18,27 @@ E-mail: Kuba.drozd09@wp.pl */
 // Import of modules
 const pi = require('./deleglise-rivat/utilities.js');
 const { hideBin } = require('yargs/helpers');
-const options = require('yargs')(hideBin(process.argv)).argv;
+const yargs = require('yargs');
+const validators = require('./cmdvalidators.js');
+const options = yargs(hideBin(process.argv))
+    .usage('Usage: $0 x [options]')
+    .command('$0 <x>', false, yargs => {
+        return yargs.positional('x', {
+            describe: 'The number for computing the prime-counting function.',
+            type: 'number'
+        });
+    }, argv => {
+        validators.xValidator(argv.x);
+    })
+    .help()
+    .alias('help', 'h')
+    .alias('version', 'v')
+    .locale('en')
+    .strict()
+    .argv;
 // License
 console.log('JSprimecount Copyright © 2021 Jakub Drozd');
 console.log('This program comes with ABSOLUTELY NO WARRANTY; for details see https://github.com/JakubDrozd/JSprimecount/blob/main/LICENSE.txt.');
 console.log('This is free software, and you are welcome to redistribute it under certain conditions; see the above link for details.');
-let x = options._[0];
-if (x > 1000000000000 || x < 10 || isNaN(x)) {
-    throw new Error('Number must be between 10 and 1 trillion');
-}
-console.log(pi.pismall(x));
+
+console.log(pi.pismall(options.x));
