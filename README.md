@@ -35,7 +35,6 @@ $ node main.js 1e7
 ## Command-line options
 
 ```
-$ node main.js --help
 Usage: main.js x [options]
 
 Positionals:
