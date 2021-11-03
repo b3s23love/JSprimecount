@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/.
 E-mail: Kuba.drozd09@wp.pl */
 // Import of modules
-const pi = require('./deleglise-rivat/utilities.js');
+const { pismall } = require('./JSprimesieve/utilities.js');
 const { hideBin } = require('yargs/helpers');
 const yargs = require('yargs');
 const validators = require('./cmdvalidators.js');
@@ -30,6 +30,10 @@ const options = yargs(hideBin(process.argv))
     }, argv => {
         validators.xValidator(argv.x);
     })
+    .option('n', {
+        alias: 'nth-prime',
+        description: 'Compute the n-th prime'
+    })
     .help()
     .alias('help', 'h')
     .alias('version', 'v')
@@ -41,4 +45,4 @@ console.log('JSprimecount Copyright © 2021 Jakub Drozd');
 console.log('This program comes with ABSOLUTELY NO WARRANTY; for details see https://github.com/JakubDrozd/JSprimecount/blob/main/LICENSE.txt.');
 console.log('This is free software, and you are welcome to redistribute it under certain conditions; see the above link for details.');
 
-console.log(pi.pismall(options.x));
+console.log(pismall(options.x));

@@ -3,10 +3,10 @@
 Copyright © 2021 Jakub Drozd
 For full notice see pi.js */
 // Module import
-const { mobiustabulator } = require('./utilities.js');
+const { mobiustabulator } = require('../JSprimesieve/utilities.js');
 // Function
 const S0 = (x, y) => {
-    console.log('Calculating S0')
+    console.log('Calculating S0');
     let mobiustable = mobiustabulator(y);
     let total = 0;
     for (let i = 0; i < y; i++) {
@@ -14,6 +14,6 @@ const S0 = (x, y) => {
     }
     console.log('S0 calculated!');
     return total;
-}
+};
 // Module export
 module.exports = S0;

@@ -3,7 +3,7 @@
 Copyright © 2021 Jakub Drozd
 For full notice see pi.js */
 // Module import
-const { pitabulator, ersieve } = require('./utilities.js');
+const { pitabulator, ersieve } = require('../JSprimesieve/utilities.js');
 // Function
 const U = (x, y) => {
     console.log('Computing U...');

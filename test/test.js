@@ -4,7 +4,7 @@
 Copyright © 2021 Jakub Drozd
 For full notice see pi.js */
 const assert = require('assert');
-const utilities = require('../deleglise-rivat/utilities.js');
+const utilities = require('../JSprimesieve/utilities.js');
 const S0 = require('../deleglise-rivat/S0.js');
 const S1 = require('../deleglise-rivat/S1.js');
 const U = require('../deleglise-rivat/U.js');
