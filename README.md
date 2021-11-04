@@ -38,10 +38,13 @@ $ node main.js 1e7
 Usage: main.js x [options]
 
 Positionals:
-  x  The number for computing the prime-counting function.              [number]
+  x                                                                     [number]
 
 Options:
   -v, --version  Show version number                                   [boolean]
+      --phi      phi(x, a) counts the numbers <= x that are not divisible by any
+                 of the first a primes Call it by --phi x a.
+      --time     Display time in seconds.                              [boolean]
   -h, --help     Show help                                             [boolean]
 ```
 

@@ -1,7 +1,7 @@
 /* JSprimecount is a fast implementation of algorithms calculating the prime-counting function.
 
 Copyright © 2021 Jakub Drozd
-For full notice see pi.js */
+For full notice see main.js at the top level directory. */
 // Module imports
 const S1 = require('./S1.js');
 const S2 = require('./S2.js');
