@@ -1,6 +1,6 @@
 const { exit } = require('yargs');
 
-const xValidator = (x) => {
+const xValidator = x => {
     if (isNaN(x)) {
         console.log('Exited with code 2: Input is not a number');
         exit(2, 'Input is not a number');
@@ -13,4 +13,12 @@ const xValidator = (x) => {
     }
 };
 
+const phiArgValidator = (x, a) => {
+    if (x < 0 || a < 0) {
+        console.log('Exited with code 5: One of phi inputs is negative');
+        exit(5, 'One of phi inputs is negative.');
+    } 
+};
+
 module.exports.xValidator = xValidator;
+module.exports.phiArgValidator = phiArgValidator;

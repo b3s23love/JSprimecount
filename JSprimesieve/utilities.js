@@ -1,7 +1,7 @@
 /* JSprimecount is a fast implementation of algorithms calculating the prime-counting function.
 
 Copyright © 2021 Jakub Drozd
-For full notice see pi.js */
+For full notice see main.js at the top level directory. */
 const ersieve = n => {
     // Eratosthenes algorithm to find all primes under n
     var array = [], upperLimit = Math.sqrt(n), output = [];
@@ -105,6 +105,14 @@ const phismall = (x, b, primlist) => {
         return phi1 - phi2;
     }
 };
+
+const nthprimeapprox = n => {
+    if (n >= 6) {
+        return n * Math.log(n * Math.log(n));
+    } else {
+        return 15;
+    }
+};
 // Module exports
 module.exports.ersieve = ersieve;
 module.exports.pismall = pismall;
@@ -112,3 +120,4 @@ module.exports.pitabulator = pitabulator;
 module.exports.mobius = mobius;
 module.exports.mobiustabulator = mobiustabulator;
 module.exports.phismall = phismall;
+module.exports.nthprimeapprox = nthprimeapprox;
