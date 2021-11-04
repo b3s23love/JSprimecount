@@ -43,7 +43,7 @@ const options = yargs(hideBin(process.argv))
         }
 })
 .option('phi', {
-    describe: 'phi(x, a) counts the numbers <= x that are not divisible by any of the first a primes Call it by --phi x a.',
+    describe: 'phi(x, a) counts the numbers <= x that are not divisible by any of the first a primes. Syntax: --phi <x> <a>.',
     nargs: 2
 })
 .option('time', {
