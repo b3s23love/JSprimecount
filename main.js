@@ -27,6 +27,7 @@ const licensePrinter = () => {
     console.log('This is free software, and you are welcome to redistribute it under certain conditions; see the above link for details.');
 };
 const startTime = new Date();
+licensePrinter();
 // Yargs logic
 const options = yargs(hideBin(process.argv))
 .usage('Usage: $0 x [options]')
@@ -37,7 +38,6 @@ const options = yargs(hideBin(process.argv))
         });
     }, argv => {
         if (argv.x !== undefined) {
-            licensePrinter();
             validators.xValidator(argv.x);
             console.log(utilities.pismall(argv.x));
         }

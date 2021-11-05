@@ -2,3 +2,4 @@ git-commit.sh
 /source.zip
 /node_modules
 /.nyc_output
+/primecount
