@@ -2,9 +2,9 @@
 /* JSprimecount is a fast implementation of algorithms calculating the prime-counting function.
 
 Copyright © 2021 Jakub Drozd
-For full notice see main.js at the top level directory. */
+This file is distributed under the GPL v3 license, for full notice see main.js in the top level directory. */
 const assert = require('assert');
-const utilities = require('../JSprimesieve/utilities.js');
+const utilities = require('../utilities/utilities.js');
 const S0 = require('../deleglise-rivat/S0.js');
 const S1 = require('../deleglise-rivat/S1.js');
 const U = require('../deleglise-rivat/U.js');

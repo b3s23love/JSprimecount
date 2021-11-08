@@ -1,9 +1,9 @@
 /* JSprimecount is a fast implementation of algorithms calculating the prime-counting function.
 
 Copyright © 2021 Jakub Drozd
-For full notice see main.js at the top level directory. */
+This file is distributed under the GPL v3 license, for full notice see main.js in the top level directory. */
 // Module import
-const { mobiustabulator } = require('../JSprimesieve/utilities.js');
+const { mobiustabulator } = require('../utilities/utilities.js');
 // Function
 const S0 = (x, y) => {
     console.log('Calculating S0');

@@ -1,6 +1,6 @@
 /* JSprimecount is a fast implementation of algorithms calculating the prime-counting function.
 
-Copyright © 2021 Jakub Drozd
+Copyright © 2021 Jakub Drozd, <Kuba.drozd09@wp.pl>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/.
-E-mail: Kuba.drozd09@wp.pl */
+*/
 // Import of modules
-const utilities = require('./JSprimesieve/utilities.js');
+const utilities = require('./utilities/utilities.js');
 const { hideBin } = require('yargs/helpers');
 const yargs = require('yargs');
 const validators = require('./cmdvalidators.js');
@@ -47,20 +47,20 @@ const options = yargs(hideBin(process.argv))
     nargs: 2
 })
 .option('time', {
-    describe: 'Display time in seconds.',
+    default: true,
+    describe: 'Display time in seconds. Syntax: --time=<true|false>',
     type: 'boolean'
 })
 .help()
 .alias('help', 'h')
 .alias('version', 'v')
-.locale('en')
+.locale('pirate')
 .strict()
 .argv;
 
 if (options.phi) {
     validators.phiArgValidator(options.phi[0], options.phi[1]);
     const primes = utilities.ersieve(utilities.nthprimeapprox(options.phi[1]));
-    // console.log(utilities.phismall(options.phi[0], options.phi[1], primes));
     console.log(utilities.phismall(options.phi[0], options.phi[1], primes));
 }
 
