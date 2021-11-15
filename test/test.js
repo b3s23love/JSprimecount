@@ -9,6 +9,7 @@ const S0 = require('../deleglise-rivat/S0.js');
 const S1 = require('../deleglise-rivat/S1.js');
 const U = require('../deleglise-rivat/U.js');
 // Test
+require('./bitwise.js');
 describe('pi', () => {
     describe('.utilities', () => {
         describe('.ersieve()', () => {

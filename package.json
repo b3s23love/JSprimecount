@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "assert": "^2.0.0",
+    "extra-bigint": "^0.0.62",
     "yargs": "^17.2.1"
   },
   "devDependencies": {

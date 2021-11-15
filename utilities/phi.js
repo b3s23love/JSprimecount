@@ -1,6 +1,6 @@
 //
-// @file  phi.cpp
-// @brief The PhiCache class calculates the partial sieve function
+//        phi.js
+//        The PhiCache class calculates the partial sieve function
 //        (a.k.a. Legendre-sum) using the recursive formula:
 //        phi(x, a) = phi(x, a - 1) - phi(x / primes[a], a - 1).
 //        phi(x, a) counts the numbers <= x that are not divisible
@@ -16,3 +16,16 @@
 //
 // This file is distributed under the GPL v3 license, for full notice see main.js in the top level directory.
 //
+
+const phiSmall = require('./phiSmall.js');
+
+const PhiCache = (x, a, primes, pi) => {
+    // We cache phi(x, a) if a <= max_a.
+    let max_a = 100;
+
+    // Make sure we cache only frequently used values
+    a = Math.min(a, 30);
+    max_a = Math.min(a, max_a);
+    
+
+};
