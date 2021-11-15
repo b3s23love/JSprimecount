@@ -1,4 +1,3 @@
-const bigintMath = require('extra-bigint');
 const { bitNot, bitLeftShift, bitRightShift } = require('./bitOperators.js');
 
 const rightShift = n => {
@@ -19,10 +18,10 @@ const unsetL = n => {
 };
 
 // pi(x) for x < 6
-const piTiny_ = [0, 0, 1, 2, 2, 3];
+const _piTiny = [0, 0, 1, 2, 2, 3];
 
 // Bitmasks needed to set a specific bit in the sieve array
-const setBit_ = [
+const _setBit = [
   0n, bitLeftShift(1n, 0n, true), 0n, 0n, 0n,
   0n, 0n, bitLeftShift(1n, 1n, true), 0n, 0n,
   0n, bitLeftShift(1n, 2n, true), 0n, bitLeftShift(1n, 3n, true), 0n,
@@ -74,7 +73,7 @@ const setBit_ = [
 ];
 
 // Bitmasks needed to unset a specific bit in the sieve array
-const unsetBit = [
+const _unsetBit = [
   bitNot(0n, true), bitNot(bitLeftShift(1n, 0n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
   bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 1n, true), true), bitNot(0n, true), bitNot(0n, true),
   bitNot(0n, true), bitNot(bitLeftShift(1n, 2n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 3n, true), true), bitNot(0n, true),
@@ -125,7 +124,7 @@ const unsetBit = [
   bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 63n, true), true)
 ];
 
-const unsetLarger = [
+const _unsetLarger = [
   unsetL(0), unsetL(1), unsetL(2), unsetL(3), unsetL(4),
   unsetL(5), unsetL(6), unsetL(7), unsetL(8), unsetL(9),
   unsetL(10), unsetL(11), unsetL(12), unsetL(13), unsetL(14),
@@ -175,3 +174,8 @@ const unsetLarger = [
   unsetL(230), unsetL(231), unsetL(232), unsetL(233), unsetL(234),
   unsetL(235), unsetL(236), unsetL(237), unsetL(238), unsetL(239)
 ];
+
+module.exports._piTiny = _piTiny;
+module.exports._setBit = _setBit;
+module.exports._unsetBit = _unsetBit;
+module.exports._unsetLarger = _unsetLarger;
