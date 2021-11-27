@@ -33,6 +33,19 @@ const bitRightShift = (x, a, isLong) => {
     return x / ( 2n ** a );
 };
 
+const and64 = (v1, v2) => {
+    var hi = 0x80000000n;
+    var low = 0x7fffffffn;
+    var hi1 = ~~(v1 / hi);
+    var hi2 = ~~(v2 / hi);
+    var low1 = v1 & low;
+    var low2 = v2 & low;
+    var h = hi1 & hi2;
+    var l = low1 & low2;
+    return h*hi + l;
+};
+
 module.exports.bitNot = bitNot;
 module.exports.bitLeftShift = bitLeftShift;
 module.exports.bitRightShift = bitRightShift;
+module.exports.and64 = and64;

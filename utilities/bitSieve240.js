@@ -1,181 +1,155 @@
-const { bitNot, bitLeftShift, bitRightShift } = require('./bitOperators.js');
+//
+//        BitSieve240.js
+//        BitSieve240 contains lookup tables that are
+//        needed to implement a prime sieving algorithm where each
+//        bit corresponds to an integer that is not divisible by 2,
+//        3 and 5. The 8 bits of each byte correspond to the offsets
+//        { 1, 7, 11, 13, 17, 19, 23, 29 }. Since the sieve array
+//        uses 64-bit BigInts, one sieve array element
+//        (8 bytes) corresponds to an interval of size 30 * 8 = 240.
+//
+// Copyright © 2021 Jakub Drozd, <Kuba.drozd09@wp.pl>
+//
+// This file is distributed under the GPL v3 license, for full notice see main.js in the top level directory.
+//
 
-const rightShift = n => {
-  return   (n % 30n >= 29n) ? 56 - n / 30n * 8n
-         : (n % 30n >= 23n) ? 57 - n / 30n * 8n
-         : (n % 30n >= 19n) ? 58 - n / 30n * 8n
-         : (n % 30n >= 17n) ? 59 - n / 30n * 8n
-         : (n % 30n >= 13n) ? 60 - n / 30n * 8n
-         : (n % 30n >= 11n) ? 61 - n / 30n * 8n
-         : (n % 30n >= 7n)  ? 62 - n / 30n * 8n
-         : (n % 30n >= 1n)  ? 63 - n / 30n * 8n
-         : 64n - n / 30n * 8n;
-};
+class BitSieve240 {
+  constructor() {
+    // pi(x) for x < 6
+    this.piSmall_ = [0n, 0n, 1n, 2n, 2n, 3n];
+    // Bitmasks needed to set a specific bit in the sieve array
+    this.setBit_ = [
+      0n, 1n, 0n, 0n, 0n, 0n, 0n, 2n, 0n, 0n, 0n, 4n, 0n,
+      8n, 0n, 0n, 0n, 16n, 0n, 32n, 0n, 0n, 0n, 64n, 0n,
+      0n, 0n, 0n, 0n, 128n, 0n, 256n, 0n, 0n, 0n, 0n, 0n,
+      512n, 0n, 0n, 0n, 1024n, 0n, 2048n, 0n, 0n, 0n,
+      4096n, 0n, 8192n, 0n, 0n, 0n, 16384n, 0n, 0n, 0n,
+      0n, 0n, 32768n, 0n, 65536n, 0n, 0n, 0n, 0n, 0n,
+      131072n, 0n, 0n, 0n, 262144n, 0n, 524288n, 0n,
+      0n, 0n, 1048576n, 0n, 2097152n, 0n, 0n, 0n,
+      4194304n, 0n, 0n, 0n, 0n, 0n, 8388608n, 0n,
+      16777216n, 0n, 0n, 0n, 0n, 0n, 33554432n, 0n, 0n,
+      0n, 67108864n, 0n, 134217728n, 0n, 0n, 0n,
+      268435456n, 0n, 536870912n, 0n, 0n, 0n,
+      1073741824n, 0n, 0n, 0n, 0n, 0n, 2147483648n,
+      0n, 4294967296n, 0n, 0n, 0n, 0n, 0n,
+      8589934592n, 0n, 0n, 0n, 17179869184n, 0n,
+      34359738368n, 0n, 0n, 0n, 68719476736n, 0n,
+      137438953472n, 0n, 0n, 0n, 274877906944n, 0n,
+      0n, 0n, 0n, 0n, 549755813888n, 0n,
+      1099511627776n, 0n, 0n, 0n, 0n, 0n,
+      2199023255552n, 0n, 0n, 0n, 4398046511104n,
+      0n, 8796093022208n, 0n, 0n, 0n,
+      17592186044416n, 0n, 35184372088832n, 0n, 0n,
+      0n, 70368744177664n, 0n, 0n, 0n, 0n, 0n,
+      140737488355328n, 0n, 281474976710656n, 0n,
+      0n, 0n, 0n, 0n, 562949953421312n, 0n, 0n, 0n,
+      1125899906842624n, 0n, 2251799813685248n,
+      0n, 0n, 0n, 4503599627370496n, 0n,
+      9007199254740992n, 0n, 0n, 0n,
+      18014398509481984n, 0n, 0n, 0n, 0n, 0n,
+      36028797018963968n, 0n, 72057594037927936n,
+      0n, 0n, 0n, 0n, 0n, 144115188075855872n, 0n, 0n,
+      0n, 288230376151711744n, 0n,
+      576460752303423488n, 0n, 0n, 0n,
+      1152921504606846976n, 0n,
+      2305843009213693952n, 0n, 0n, 0n,
+      4611686018427387904n, 0n, 0n, 0n, 0n, 0n,
+      9223372036854775808n
+    ];
+    // Bitmasks needed to unset a specific bit in the sieve array
+    this.unsetBit_ = [
+      18446744073709551615n, 18446744073709551614n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n,
+      18446744073709551615n, 18446744073709551613n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551611n,
+      18446744073709551615n, 18446744073709551607n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551599n,
+      18446744073709551615n, 18446744073709551583n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551551n,
+      18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551487n,
+      18446744073709551615n, 18446744073709551359n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n,
+      18446744073709551615n, 18446744073709551103n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709550591n,
+      18446744073709551615n, 18446744073709549567n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709547519n,
+      18446744073709551615n, 18446744073709543423n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709535231n,
+      18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709518847n,
+      18446744073709551615n, 18446744073709486079n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n,
+      18446744073709551615n, 18446744073709420543n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709289471n,
+      18446744073709551615n, 18446744073709027327n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073708503039n,
+      18446744073709551615n, 18446744073707454463n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073705357311n,
+      18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073701163007n,
+      18446744073709551615n, 18446744073692774399n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n,
+      18446744073709551615n, 18446744073675997183n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073642442751n,
+      18446744073709551615n, 18446744073575333887n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073441116159n,
+      18446744073709551615n, 18446744073172680703n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744072635809791n,
+      18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744071562067967n,
+      18446744073709551615n, 18446744069414584319n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n,
+      18446744073709551615n, 18446744065119617023n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744056529682431n,
+      18446744073709551615n, 18446744039349813247n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744004990074879n,
+      18446744073709551615n, 18446743936270598143n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446743798831644671n,
+      18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446743523953737727n,
+      18446744073709551615n, 18446742974197923839n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n,
+      18446744073709551615n, 18446741874686296063n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446739675663040511n,
+      18446744073709551615n, 18446735277616529407n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446726481523507199n,
+      18446744073709551615n, 18446708889337462783n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446673704965373951n,
+      18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446603336221196287n,
+      18446744073709551615n, 18446462598732840959n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n,
+      18446744073709551615n, 18446181123756130303n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18445618173802708991n,
+      18446744073709551615n, 18444492273895866367n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18442240474082181119n,
+      18446744073709551615n, 18437736874454810623n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18428729675200069631n,
+      18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18410715276690587647n,
+      18446744073709551615n, 18374686479671623679n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n,
+      18446744073709551615n, 18302628885633695743n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18158513697557839871n,
+      18446744073709551615n, 17870283321406128127n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 17293822569102704639n,
+      18446744073709551615n, 16140901064495857663n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 13835058055282163711n,
+      18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 18446744073709551615n, 9223372036854775807n
+    ];
+    // Unset bits > stop
+    this.unsetLarger_ = [
+      0n, 1n, 1n, 1n, 1n, 1n, 1n, 3n, 3n, 3n, 3n, 7n, 7n, 15n, 15n, 15n, 15n, 31n, 31n, 63n, 63n,
+      63n, 63n, 127n, 127n, 127n, 127n, 127n, 127n, 255n, 255n, 511n, 511n, 511n, 511n,
+      511n, 511n, 1023n, 1023n, 1023n, 1023n, 2047n, 2047n, 4095n, 4095n, 4095n, 4095n,
+      8191n, 8191n, 16383n, 16383n, 16383n, 16383n, 32767n, 32767n, 32767n, 32767n,
+      32767n, 32767n, 65535n, 65535n, 131071n, 131071n, 131071n, 131071n, 131071n,
+      131071n, 262143n, 262143n, 262143n, 262143n, 524287n, 524287n, 1048575n,
+      1048575n, 1048575n, 1048575n, 2097151n, 2097151n, 4194303n, 4194303n,
+      4194303n, 4194303n, 8388607n, 8388607n, 8388607n, 8388607n, 8388607n,
+      8388607n, 16777215n, 16777215n, 33554431n, 33554431n, 33554431n, 33554431n,
+      33554431n, 33554431n, 67108863n, 67108863n, 67108863n, 67108863n, 134217727n,
+      134217727n, 268435455n, 268435455n, 268435455n, 268435455n, 536870911n,
+      536870911n, 1073741823n, 1073741823n, 1073741823n, 1073741823n, 2147483647n,
+      2147483647n, 2147483647n, 2147483647n, 2147483647n, 2147483647n,
+      4294967295n, 4294967295n, 8589934591n, 8589934591n, 8589934591n,
+      8589934591n, 8589934591n, 8589934591n, 17179869183n, 17179869183n,
+      17179869183n, 17179869183n, 34359738367n, 34359738367n, 68719476735n,
+      68719476735n, 68719476735n, 68719476735n, 137438953471n, 137438953471n,
+      274877906943n, 274877906943n, 274877906943n, 274877906943n, 549755813887n,
+      549755813887n, 549755813887n, 549755813887n, 549755813887n, 549755813887n,
+      1099511627775n, 1099511627775n, 2199023255551n, 2199023255551n,
+      2199023255551n, 2199023255551n, 2199023255551n, 2199023255551n,
+      4398046511103n, 4398046511103n, 4398046511103n, 4398046511103n,
+      8796093022207n, 8796093022207n, 17592186044415n, 17592186044415n,
+      17592186044415n, 17592186044415n, 35184372088831n, 35184372088831n,
+      70368744177663n, 70368744177663n, 70368744177663n, 70368744177663n,
+      140737488355327n, 140737488355327n, 140737488355327n, 140737488355327n,
+      140737488355327n, 140737488355327n, 281474976710655n, 281474976710655n,
+      562949953421311n, 562949953421311n, 562949953421311n, 562949953421311n,
+      562949953421311n, 562949953421311n, 1125899906842623n, 1125899906842623n,
+      1125899906842623n, 1125899906842623n, 2251799813685247n,
+      2251799813685247n, 4503599627370495n, 4503599627370495n,
+      4503599627370495n, 4503599627370495n, 9007199254740991n,
+      9007199254740991n, 18014398509481983n, 18014398509481983n,
+      18014398509481983n, 18014398509481983n, 36028797018963967n,
+      36028797018963967n, 36028797018963967n, 36028797018963967n,
+      36028797018963967n, 36028797018963967n, 72057594037927935n,
+      72057594037927935n, 144115188075855871n, 144115188075855871n,
+      144115188075855871n, 144115188075855871n, 144115188075855871n,
+      144115188075855871n, 288230376151711743n, 288230376151711743n,
+      288230376151711743n, 288230376151711743n, 576460752303423487n,
+      576460752303423487n, 1152921504606846975n, 1152921504606846975n,
+      1152921504606846975n, 1152921504606846975n, 2305843009213693951n,
+      2305843009213693951n, 4611686018427387903n, 4611686018427387903n,
+      4611686018427387903n, 4611686018427387903n, 9223372036854775807n,
+      9223372036854775807n, 9223372036854775807n, 9223372036854775807n,
+      9223372036854775807n, 9223372036854775807n, 18446744073709551615n
+    ];
+  }
+}
 
-// Bitmask to unset bits >= n
-const unsetL = n => {
-    return n === 0n ? 0n : bitRightShift(bitNot(0n, true), rightShift(n), true);
-};
-
-// pi(x) for x < 6
-const _piTiny = [0, 0, 1, 2, 2, 3];
-
-// Bitmasks needed to set a specific bit in the sieve array
-const _setBit = [
-  0n, bitLeftShift(1n, 0n, true), 0n, 0n, 0n,
-  0n, 0n, bitLeftShift(1n, 1n, true), 0n, 0n,
-  0n, bitLeftShift(1n, 2n, true), 0n, bitLeftShift(1n, 3n, true), 0n,
-  0n, 0n, bitLeftShift(1n, 4n, true), 0n, bitLeftShift(1n, 5n, true),
-  0n, 0n, 0n, bitLeftShift(1n, 6n, true), 0n,
-  0n, 0n, 0n, 0n, bitLeftShift(1n, 7n, true),
-  0n, bitLeftShift(1n, 8n, true), 0n, 0n, 0n,
-  0n, 0n, bitLeftShift(1n, 9n, true), 0n, 0n,
-  0n, bitLeftShift(1n, 10n, true), 0n, bitLeftShift(1n, 11n, true), 0n,
-  0n, 0n, bitLeftShift(1n, 12n, true), 0n, bitLeftShift(1n, 13n, true),
-  0n, 0n, 0n, bitLeftShift(1n, 14n, true), 0n,
-  0n, 0n, 0n, 0n, bitLeftShift(1n, 15n, true),
-  0n, bitLeftShift(1n, 16n, true), 0n, 0n, 0n,
-  0n, 0n, bitLeftShift(1n, 17n, true), 0n, 0n,
-  0n, bitLeftShift(1n, 18n, true), 0n, bitLeftShift(1n, 19n, true), 0n,
-  0n, 0n, bitLeftShift(1n, 20n, true), 0n, bitLeftShift(1n, 21n, true),
-  0n, 0n, 0n, bitLeftShift(1n, 22n, true), 0n,
-  0n, 0n, 0n, 0n, bitLeftShift(1n, 23n, true),
-  0n, bitLeftShift(1n, 24n, true), 0n, 0n, 0n,
-  0n, 0n, bitLeftShift(1n, 25n, true), 0n, 0n,
-  0n, bitLeftShift(1n, 26n, true), 0n, bitLeftShift(1n, 27n, true), 0n,
-  0n, 0n, bitLeftShift(1n, 28n, true), 0n, bitLeftShift(1n, 29n, true),
-  0n, 0n, 0n, bitLeftShift(1n, 30n, true), 0n,
-  0n, 0n, 0n, 0n, bitLeftShift(1n, 31n, true),
-  0n, bitLeftShift(1n, 32n, true), 0n, 0n, 0n,
-  0n, 0n, bitLeftShift(1n, 33n, true), 0n, 0n,
-  0n, bitLeftShift(1n, 34n, true), 0n, bitLeftShift(1n, 35n, true), 0n,
-  0n, 0n, bitLeftShift(1n, 36n, true), 0n, bitLeftShift(1n, 37n, true),
-  0n, 0n, 0n, bitLeftShift(1n, 38n, true), 0n,
-  0n, 0n, 0n, 0n, bitLeftShift(1n, 39n, true),
-  0n, bitLeftShift(1n, 40n, true), 0n, 0n, 0n,
-  0n, 0n, bitLeftShift(1n, 41n, true), 0n, 0n,
-  0n, bitLeftShift(1n, 42n, true), 0n, bitLeftShift(1n, 43n, true), 0n,
-  0n, 0n, bitLeftShift(1n, 44n, true), 0n, bitLeftShift(1n, 45n, true),
-  0n, 0n, 0n, bitLeftShift(1n, 46n, true), 0n,
-  0n, 0n, 0n, 0n, bitLeftShift(1n, 47n, true),
-  0n, bitLeftShift(1n, 48n, true), 0n, 0n, 0n,
-  0n, 0n, bitLeftShift(1n, 49n, true), 0n, 0n,
-  0n, bitLeftShift(1n, 50n, true), 0n, bitLeftShift(1n, 51n, true), 0n,
-  0n, 0n, bitLeftShift(1n, 52n, true), 0n, bitLeftShift(1n, 53n, true),
-  0n, 0n, 0n, bitLeftShift(1n, 54n, true), 0n,
-  0n, 0n, 0n, 0n, bitLeftShift(1n, 55n, true),
-  0n, bitLeftShift(1n, 56n, true), 0n, 0n, 0n,
-  0n, 0n, bitLeftShift(1n, 57n, true), 0n, 0n,
-  0n, bitLeftShift(1n, 58n, true), 0n, bitLeftShift(1n, 59n, true), 0n,
-  0n, 0n, bitLeftShift(1n, 60n, true), 0n, bitLeftShift(1n, 61n, true),
-  0n, 0n, 0n, bitLeftShift(1n, 62n, true), 0n,
-  0n, 0n, 0n, 0n, bitLeftShift(1n, 63n, true)
-];
-
-// Bitmasks needed to unset a specific bit in the sieve array
-const _unsetBit = [
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 0n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 1n, true), true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 2n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 3n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 4n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 5n, true), true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 6n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 7n, true), true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 8n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 9n, true), true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 10n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 11n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 12n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 13n, true), true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 14n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 15n, true), true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 16n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 17n, true), true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 18n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 19n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 20n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 21n, true), true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 22n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 23n, true), true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 24n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 25n, true), true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 26n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 27n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 28n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 29n, true), true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 30n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 31n, true), true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 32n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 33n, true), true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 34n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 35n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 36n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 37n, true), true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 38n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 39n, true), true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 40n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 41n, true), true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 42n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 43n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 44n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 45n, true), true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 46n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 47n, true), true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 48n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 49n, true), true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 50n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 51n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 52n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 53n, true), true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 54n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 55n, true), true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 56n, true), true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 57n, true), true), bitNot(0n, true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(bitLeftShift(1n, 58n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 59n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 60n, true), true), bitNot(0n, true), bitNot(bitLeftShift(1n, 61n, true), true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 62n, true), true), bitNot(0n, true),
-  bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(0n, true), bitNot(bitLeftShift(1n, 63n, true), true)
-];
-
-const _unsetLarger = [
-  unsetL(0), unsetL(1), unsetL(2), unsetL(3), unsetL(4),
-  unsetL(5), unsetL(6), unsetL(7), unsetL(8), unsetL(9),
-  unsetL(10), unsetL(11), unsetL(12), unsetL(13), unsetL(14),
-  unsetL(15), unsetL(16), unsetL(17), unsetL(18), unsetL(19),
-  unsetL(20), unsetL(21), unsetL(22), unsetL(23), unsetL(24),
-  unsetL(25), unsetL(26), unsetL(27), unsetL(28), unsetL(29),
-  unsetL(30), unsetL(31), unsetL(32), unsetL(33), unsetL(34),
-  unsetL(35), unsetL(36), unsetL(37), unsetL(38), unsetL(39),
-  unsetL(40), unsetL(41), unsetL(42), unsetL(43), unsetL(44),
-  unsetL(45), unsetL(46), unsetL(47), unsetL(48), unsetL(49),
-  unsetL(50), unsetL(51), unsetL(52), unsetL(53), unsetL(54),
-  unsetL(55), unsetL(56), unsetL(57), unsetL(58), unsetL(59),
-  unsetL(60), unsetL(61), unsetL(62), unsetL(63), unsetL(64),
-  unsetL(65), unsetL(66), unsetL(67), unsetL(68), unsetL(69),
-  unsetL(70), unsetL(71), unsetL(72), unsetL(73), unsetL(74),
-  unsetL(75), unsetL(76), unsetL(77), unsetL(78), unsetL(79),
-  unsetL(80), unsetL(81), unsetL(82), unsetL(83), unsetL(84),
-  unsetL(85), unsetL(86), unsetL(87), unsetL(88), unsetL(89),
-  unsetL(90), unsetL(91), unsetL(92), unsetL(93), unsetL(94),
-  unsetL(95), unsetL(96), unsetL(97), unsetL(98), unsetL(99),
-  unsetL(100), unsetL(101), unsetL(102), unsetL(103), unsetL(104),
-  unsetL(105), unsetL(106), unsetL(107), unsetL(108), unsetL(109),
-  unsetL(110), unsetL(111), unsetL(112), unsetL(113), unsetL(114),
-  unsetL(115), unsetL(116), unsetL(117), unsetL(118), unsetL(119),
-  unsetL(120), unsetL(121), unsetL(122), unsetL(123), unsetL(124),
-  unsetL(125), unsetL(126), unsetL(127), unsetL(128), unsetL(129),
-  unsetL(130), unsetL(131), unsetL(132), unsetL(133), unsetL(134),
-  unsetL(135), unsetL(136), unsetL(137), unsetL(138), unsetL(139),
-  unsetL(140), unsetL(141), unsetL(142), unsetL(143), unsetL(144),
-  unsetL(145), unsetL(146), unsetL(147), unsetL(148), unsetL(149),
-  unsetL(150), unsetL(151), unsetL(152), unsetL(153), unsetL(154),
-  unsetL(155), unsetL(156), unsetL(157), unsetL(158), unsetL(159),
-  unsetL(160), unsetL(161), unsetL(162), unsetL(163), unsetL(164),
-  unsetL(165), unsetL(166), unsetL(167), unsetL(168), unsetL(169),
-  unsetL(170), unsetL(171), unsetL(172), unsetL(173), unsetL(174),
-  unsetL(175), unsetL(176), unsetL(177), unsetL(178), unsetL(179),
-  unsetL(180), unsetL(181), unsetL(182), unsetL(183), unsetL(184),
-  unsetL(185), unsetL(186), unsetL(187), unsetL(188), unsetL(189),
-  unsetL(190), unsetL(191), unsetL(192), unsetL(193), unsetL(194),
-  unsetL(195), unsetL(196), unsetL(197), unsetL(198), unsetL(199),
-  unsetL(200), unsetL(201), unsetL(202), unsetL(203), unsetL(204),
-  unsetL(205), unsetL(206), unsetL(207), unsetL(208), unsetL(209),
-  unsetL(210), unsetL(211), unsetL(212), unsetL(213), unsetL(214),
-  unsetL(215), unsetL(216), unsetL(217), unsetL(218), unsetL(219),
-  unsetL(220), unsetL(221), unsetL(222), unsetL(223), unsetL(224),
-  unsetL(225), unsetL(226), unsetL(227), unsetL(228), unsetL(229),
-  unsetL(230), unsetL(231), unsetL(232), unsetL(233), unsetL(234),
-  unsetL(235), unsetL(236), unsetL(237), unsetL(238), unsetL(239)
-];
-
-module.exports._piTiny = _piTiny;
-module.exports._setBit = _setBit;
-module.exports._unsetBit = _unsetBit;
-module.exports._unsetLarger = _unsetLarger;
+module.exports = BitSieve240;
