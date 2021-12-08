@@ -22,7 +22,7 @@ Project is created with:
 Setup is easy. Just install the necessary packages using npm: 
 
 ```
-$ node install
+$ npm install
 ```
 
 ## Usage examples
