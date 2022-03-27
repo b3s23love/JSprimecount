@@ -9,7 +9,7 @@
 //        pi(x) = pi(y) + phi(x, a) - 1 - P2(x, a)
 //        with y = x^1/3, a = pi(y)
 //
-// Copyright © 2021 Jakub Drozd, <Kuba.drozd09@wp.pl>
+// Copyright © 2022 Jakub Drozd, <Kuba.drozd09@wp.pl>
 //
 // This file is distributed under the GPL v3 license, for full notice see main.js in the top level directory.
 //

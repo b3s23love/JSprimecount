@@ -2,7 +2,7 @@
 // bitOperators.js
 // Unsigned bitwise operators
 //
-// Copyright © 2021 Jakub Drozd, <Kuba.drozd09@wp.pl>
+// Copyright © 2022 Jakub Drozd, <Kuba.drozd09@wp.pl>
 //
 // This file is distributed under the GPL v3 license, for full notice see main.js in the top level directory.
 //

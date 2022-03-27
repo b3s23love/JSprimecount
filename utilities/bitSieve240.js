@@ -8,7 +8,7 @@
 //        uses 64-bit BigInts, one sieve array element
 //        (8 bytes) corresponds to an interval of size 30 * 8 = 240.
 //
-// Copyright © 2021 Jakub Drozd, <Kuba.drozd09@wp.pl>
+// Copyright © 2022 Jakub Drozd, <Kuba.drozd09@wp.pl>
 //
 // This file is distributed under the GPL v3 license, for full notice see main.js in the top level directory.
 //

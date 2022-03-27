@@ -12,7 +12,7 @@
 //        method, Revista do DETUA, vol. 4, no. 6, March 2006, p. 761.
 //        http://sweet.ua.pt/tos/bib/5.4.pdf
 //
-// Copyright © 2021 Jakub Drozd, <Kuba.drozd09@wp.pl>
+// Copyright © 2022 Jakub Drozd, <Kuba.drozd09@wp.pl>
 //
 // This file is distributed under the GPL v3 license, for full notice see main.js in the top level directory.
 //
