@@ -3,3 +3,6 @@ git-commit.sh
 /node_modules
 /.nyc_output
 /primecount
+primecount.exe
+primecount.lib
+primecount.sb3
