@@ -1,3 +1,5 @@
+# IMPORTANT ANNOUNCEMENT
+Don't use this repository for now, please. I'll rewrite this someday in the future. For now, I archive this repository.
 # JSprimecount
 A JavaScript implementation of the algorithms for calculating the prime-counting function π(x) for x up to 1 trillion.
 
